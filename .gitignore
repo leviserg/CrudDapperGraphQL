@@ -4,3 +4,8 @@
 
 /.vs
 /CrudDapperGraphQL.UnitTests/bin/Debug/net6.0
+/CrudDapperGraphQL.UnitTests/obj/Debug/net6.0/CrudDapperGraphQL.UnitTests.AssemblyInfo.cs
+/CrudDapperGraphQL.UnitTests/obj/Debug/net6.0/CrudDapperGraphQL.UnitTests.AssemblyInfoInputs.cache
+/CrudDapperGraphQL.UnitTests/obj/Debug/net6.0/CrudDapperGraphQL.UnitTests.csproj.AssemblyReference.cache
+/CrudDapperGraphQL.UnitTests/obj/Debug/net6.0/CrudDapperGraphQL.UnitTests.GeneratedMSBuildEditorConfig.editorconfig
+/CrudDapperGraphQL.UnitTests/obj/Debug/net6.0/CrudDapperGraphQL.UnitTests.assets.cache
