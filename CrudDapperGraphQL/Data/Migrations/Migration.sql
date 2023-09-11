@@ -92,7 +92,81 @@ END
 
 EXEC [dbo].[sp_Book_GetAll]
 
+CREATE OR ALTER PROCEDURE [dbo].[sp_Book_Get]
+	@Id INT
+AS
+BEGIN
 
+    SELECT
+        B.Id AS Id,
+        B.Title AS Title,
+        B.ReleaseDate AS ReleaseDate,
+		'[' + STRING_AGG('{"Id":'+ CAST(A.Id AS VARCHAR(10)) + ',"Name":"'+ A.[Name]+ '","Surname":"' +A.Surname+ '"}',',') WITHIN GROUP (ORDER BY [Surname]) + ']'
+		AS AuthorsJson
+    FROM Book B
+    JOIN AuthorBook BA ON B.Id = BA.BookId
+    JOIN Author A ON BA.AuthorId = A.Id
+	WHERE B.Id = @Id
+	GROUP BY B.Id, B.Title, B.ReleaseDate 
+
+RETURN 0;
+END
+
+EXEC [dbo].[sp_Book_Get] 4
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_Author_GetAll]
+	@OrderBy NVARCHAR(100) = NULL,
+	@OrderDirection INT = NULL
+AS
+BEGIN
+	DECLARE @DEFAULTOrderDirection INT = 1
+	DECLARE @DEFAULTOrderBY VARCHAR(100) = 'Surname'
+	
+	SELECT Id, [Name], Surname, BooksJson FROM
+    (SELECT
+        A.Id AS Id,
+        A.[Name] AS [Name],
+        A.Surname AS Surname,
+		'[' + STRING_AGG('{"Id":'+ CAST(B.Id AS VARCHAR(10)) + ',"Title":"'+ B.[Title]+ '","ReleaseDate":"' +FORMAT(B.ReleaseDate, 'yyyy-MM-ddTHH:mm:ss.fff') + '"}',',') WITHIN GROUP (ORDER BY Title) + ']'
+		AS BooksJson,
+		Count(B.Id) AS BookCount
+    FROM Author A
+    JOIN AuthorBook BA ON A.Id = BA.AuthorId
+    JOIN Book B ON BA.BookId = B.Id
+	GROUP BY A.Id, A.[Name], A.Surname) a
+    ORDER BY
+        CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'Surname' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=1 THEN A.Surname END ASC,
+        CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'Surname' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=2 THEN A.Surname END DESC,
+		CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'BookCount' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=1 THEN BookCount END ASC,
+		CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'BookCount' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=2 THEN BookCount END DESC,
+		A.Surname ASC
+RETURN 0;
+END
+
+EXEC [dbo].[sp_Author_GetAll]
+
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_Author_Get]
+	@Id INT
+AS
+BEGIN
+
+	SELECT
+        A.Id AS Id,
+        A.[Name] AS [Name],
+        A.Surname AS Surname,
+		'[' + STRING_AGG('{"Id":'+ CAST(B.Id AS VARCHAR(10)) + ',"Title":"'+ B.[Title]+ '","ReleaseDate":"' +FORMAT(B.ReleaseDate, 'yyyy-MM-ddTHH:mm:ss.fff') + '"}',',') WITHIN GROUP (ORDER BY Title) + ']'
+		AS BooksJson
+    FROM Author A
+    JOIN AuthorBook BA ON A.Id = BA.AuthorId
+    JOIN Book B ON BA.BookId = B.Id
+	WHERE A.Id = @Id
+	GROUP BY A.Id, A.[Name], A.Surname
+
+RETURN 0;
+END
+
+EXEC [dbo].[sp_Author_Get] 1
 
 /*
 CREATE OR ALTER PROCEDURE [dbo].[pub_BookNotification_CreateOrUpdate]

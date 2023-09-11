@@ -8,23 +8,23 @@ namespace CrudDapperGraphQL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookController : ControllerBase
+    public class AuthorController : ControllerBase
     {
-        private readonly IBookService _bookService;
-        public BookController(IBookService bookService)
+        private readonly IAuthorService _authorService;
+        public AuthorController(IAuthorService authorService)
         {
-            _bookService = bookService;
+            _authorService = authorService;
         }
 
         [HttpGet]
         [Route("all")]
-        public async Task<IActionResult> GetBooks([FromQuery] FilterModel filter)
+        public async Task<IActionResult> GetAuthors([FromQuery] FilterModel filter)
         {
             try
             {
                 filter = filter ?? new FilterModel();
-                var books = await _bookService.GetBooks(filter);
-                return Ok(books);
+                var authors = await _authorService.GetAuthors(filter);
+                return Ok(authors);
             }
             catch (Exception ex)
             {
@@ -35,12 +35,12 @@ namespace CrudDapperGraphQL.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<IActionResult> GetBook(int id)
+        public async Task<IActionResult> GetAuthor(int id)
         {
             try
             {
-                var book = await _bookService.GetBook(id);
-                return Ok(book);
+                var author = await _authorService.GetAuthor(id);
+                return Ok(author);
             }
             catch (NotFoundException ex)
             {

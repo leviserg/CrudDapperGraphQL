@@ -1,15 +1,14 @@
-﻿using CrudDapperGraphQL.Data.Contracts;
+﻿using CrudDapperGraphQL.Data.Contracts.Repositories;
 using CrudDapperGraphQL.Data.Models;
 using Dapper;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using System.Data;
 
 namespace CrudDapperGraphQL.Data.Repositories
 {
-    public class BookAuthorRepository : IBookAuthorRepository
+    public class BookRepository : IBookRepository
     {
         private readonly ApplicationDbContext _dbContext;
-        public BookAuthorRepository(ApplicationDbContext dbContext)
+        public BookRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -24,6 +23,19 @@ namespace CrudDapperGraphQL.Data.Repositories
                     commandType: CommandType.StoredProcedure
                 );
                 return books.ToList();
+            }
+        }
+
+        public async Task<Book> GetBook(int bookId)
+        {
+            using (var connection = _dbContext.CreateConnection())
+            {
+               var book = await connection.QueryFirstOrDefaultAsync<Book>(
+                    SpNames.Book_Get,
+                    new { Id = bookId },
+                    commandType: CommandType.StoredProcedure
+                );
+                return book;
             }
         }
 

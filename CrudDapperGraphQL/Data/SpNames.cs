@@ -5,6 +5,7 @@
 
         public const string Book_GetAll = "[dbo].[sp_Book_GetAll]";
         public const string Book_Get = "[dbo].[sp_Book_Get]";
+
         public const string Author_GetAll = "[dbo].[sp_Author_GetAll]";
         public const string Author_Get = "[dbo].[sp_Author_Get]";
 

@@ -11,6 +11,7 @@ namespace CrudDapperGraphQL.Data.Models
 
         [JsonIgnore]
         public string AuthorsJson { get; set; }
-        public List<Author> Authors => JsonSerializer.Deserialize<List<Author>>(AuthorsJson);
+        public List<Author> Authors => !string.IsNullOrEmpty(AuthorsJson) ? JsonSerializer.Deserialize<List<Author>>(AuthorsJson) : null;
+
     }
 }
