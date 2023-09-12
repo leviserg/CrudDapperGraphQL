@@ -1,6 +1,7 @@
 ﻿using CrudDapperGraphQL.Data.Contracts.Repositories;
 using CrudDapperGraphQL.Data.Models;
 using Dapper;
+using SendGrid.Helpers.Mail;
 using System.Data;
 
 namespace CrudDapperGraphQL.Data.Repositories
@@ -19,7 +20,14 @@ namespace CrudDapperGraphQL.Data.Repositories
             {
                 var authors = await connection.QueryAsync<Author>(
                     SpNames.Author_GetAll,
-                    new { filter?.OrderBy, OrderDirection = (int)filter?.OrderDirection },
+                    new
+                    {
+                        OrderBy = filter?.OrderBy,
+                        OrderDirection = (int)filter?.OrderDirection,
+                        Limit = filter?.Limit,
+                        Offset = filter?.Offset,
+                        SearchText = filter?.SearchText
+                    },
                     commandType: CommandType.StoredProcedure
                 );
                 return authors.ToList();
@@ -36,6 +44,23 @@ namespace CrudDapperGraphQL.Data.Repositories
                      commandType: CommandType.StoredProcedure
                  );
                 return author;
+            }
+        }
+
+        public async Task<Author> AuthorSave(Author author)
+        {
+            using (var connection = _dbContext.CreateConnection())
+            {
+                var result = await connection.QueryAsync<Author>(
+                     SpNames.Author_CreateOrUpdate,
+                     new { 
+                         Id = author.Id,
+                         Name = author.Name,
+                         Surname = author.Surname
+                     },
+                     commandType: CommandType.StoredProcedure
+                 );
+                return result.FirstOrDefault();
             }
         }
     }

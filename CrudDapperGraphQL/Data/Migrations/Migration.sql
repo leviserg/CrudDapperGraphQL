@@ -64,13 +64,23 @@ GROUP BY b.Title, b.ReleaseDate
 ORDER BY b.Title, Authors
 */
 
+CREATE TYPE [dbo].[ListInt] AS TABLE
+(
+	Value INT NOT NULL PRIMARY KEY
+)
+
 CREATE OR ALTER PROCEDURE [dbo].[sp_Book_GetAll]
 	@OrderBy NVARCHAR(100) = NULL,
-	@OrderDirection INT = NULL
+	@OrderDirection INT = NULL,
+	@Limit INT = 20,
+	@Offset INT = 0,
+	@SearchText NVARCHAR(MAX) = NULL
 AS
 BEGIN
 	DECLARE @DEFAULTOrderDirection INT = 1
-	DECLARE @DEFAULTOrderBY VARCHAR(100) = 'Title'
+	DECLARE @DEFAULTOrderBY NVARCHAR(100) = 'Title'
+	DECLARE @IsSearchParam INT = IIF(LEN(ISNULL(@SearchText,''))> 0, 1, 0)
+	DECLARE @CleanSearchText NVARCHAR(MAX) = UPPER(@SearchText) -- TBD - Function with remove spec chars
 
     SELECT
         B.Id AS Id,
@@ -81,16 +91,20 @@ BEGIN
     FROM Book B
     JOIN AuthorBook BA ON B.Id = BA.BookId
     JOIN Author A ON BA.AuthorId = A.Id
-	GROUP BY B.Id, B.Title, B.ReleaseDate 
+	WHERE @IsSearchParam = 0 OR UPPER(B.Title) LIKE '%' + @CleanSearchText + '%' 
+	GROUP BY B.Id, B.Title, B.ReleaseDate
     ORDER BY
         CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'Title' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=1 THEN B.Title END ASC,
         CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'Title' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=2 THEN B.Title END DESC,
 		CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'ReleaseDate' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=1 THEN B.ReleaseDate END ASC,
 		CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'ReleaseDate' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=2 THEN B.ReleaseDate END DESC
+	OFFSET @Offset ROWS
+	FETCH NEXT @Limit ROWS ONLY
+
 RETURN 0;
 END
 
-EXEC [dbo].[sp_Book_GetAll]
+EXEC [dbo].[sp_Book_GetAll] @SearchText = 'th'
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_Book_Get]
 	@Id INT
@@ -116,23 +130,29 @@ EXEC [dbo].[sp_Book_Get] 4
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_Author_GetAll]
 	@OrderBy NVARCHAR(100) = NULL,
-	@OrderDirection INT = NULL
+	@OrderDirection INT = NULL,
+	@Limit INT = 20,
+	@Offset INT = 0,
+	@SearchText VARCHAR(MAX) = NULL
 AS
 BEGIN
 	DECLARE @DEFAULTOrderDirection INT = 1
 	DECLARE @DEFAULTOrderBY VARCHAR(100) = 'Surname'
+	DECLARE @IsSearchParam INT = IIF(LEN(ISNULL(@SearchText,''))> 0, 1, 0)
+	DECLARE @CleanSearchText NVARCHAR(MAX) = UPPER(@SearchText) -- TBD - Function with remove spec chars
 	
 	SELECT Id, [Name], Surname, BooksJson FROM
     (SELECT
         A.Id AS Id,
         A.[Name] AS [Name],
         A.Surname AS Surname,
-		'[' + STRING_AGG('{"Id":'+ CAST(B.Id AS VARCHAR(10)) + ',"Title":"'+ B.[Title]+ '","ReleaseDate":"' +FORMAT(B.ReleaseDate, 'yyyy-MM-ddTHH:mm:ss.fff') + '"}',',') WITHIN GROUP (ORDER BY Title) + ']'
+		ISNULL('[' + STRING_AGG('{"Id":'+ CAST(B.Id AS VARCHAR(10)) + ',"Title":"'+ B.[Title]+ '","ReleaseDate":"' +FORMAT(B.ReleaseDate, 'yyyy-MM-ddTHH:mm:ss.fff') + '"}',',') WITHIN GROUP (ORDER BY Title) + ']','[]')
 		AS BooksJson,
 		Count(B.Id) AS BookCount
     FROM Author A
-    JOIN AuthorBook BA ON A.Id = BA.AuthorId
-    JOIN Book B ON BA.BookId = B.Id
+    LEFT JOIN AuthorBook BA ON A.Id = BA.AuthorId
+    LEFT JOIN Book B ON BA.BookId = B.Id
+	WHERE @IsSearchParam = 0 OR UPPER(A.[Name]+' '+A.Surname) LIKE '%' + @CleanSearchText + '%'
 	GROUP BY A.Id, A.[Name], A.Surname) a
     ORDER BY
         CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'Surname' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=1 THEN A.Surname END ASC,
@@ -140,10 +160,12 @@ BEGIN
 		CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'BookCount' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=1 THEN BookCount END ASC,
 		CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'BookCount' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=2 THEN BookCount END DESC,
 		A.Surname ASC
+	OFFSET @Offset ROWS
+	FETCH NEXT @Limit ROWS ONLY
 RETURN 0;
 END
 
-EXEC [dbo].[sp_Author_GetAll]
+EXEC [dbo].[sp_Author_GetAll] @SearchText = 'o', @Limit = 4, @Offset = 0
 
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_Author_Get]
@@ -155,138 +177,131 @@ BEGIN
         A.Id AS Id,
         A.[Name] AS [Name],
         A.Surname AS Surname,
-		'[' + STRING_AGG('{"Id":'+ CAST(B.Id AS VARCHAR(10)) + ',"Title":"'+ B.[Title]+ '","ReleaseDate":"' +FORMAT(B.ReleaseDate, 'yyyy-MM-ddTHH:mm:ss.fff') + '"}',',') WITHIN GROUP (ORDER BY Title) + ']'
-		AS BooksJson
+		ISNULL('[' + STRING_AGG('{"Id":'+ CAST(B.Id AS VARCHAR(10)) + ',"Title":"'+ B.[Title]+ '","ReleaseDate":"' +FORMAT(B.ReleaseDate, 'yyyy-MM-ddTHH:mm:ss.fff') + '"}',',') WITHIN GROUP (ORDER BY Title) + ']','[]')	AS BooksJson
     FROM Author A
-    JOIN AuthorBook BA ON A.Id = BA.AuthorId
-    JOIN Book B ON BA.BookId = B.Id
+    LEFT JOIN AuthorBook BA ON A.Id = BA.AuthorId
+    LEFT JOIN Book B ON BA.BookId = B.Id
 	WHERE A.Id = @Id
 	GROUP BY A.Id, A.[Name], A.Surname
 
 RETURN 0;
 END
 
-EXEC [dbo].[sp_Author_Get] 1
+EXEC [dbo].[sp_Author_Get] 5
 
-/*
-CREATE OR ALTER PROCEDURE [dbo].[pub_BookNotification_CreateOrUpdate]
-	@UserId			INT,
-	@BookId			UNIQUEIDENTIFIER,
-	@NotificationStatusId INT,
-	@IsChecked BIT NULL
+CREATE OR ALTER PROCEDURE [dbo].[sp_Author_CreateOrUpdate]
+	@Id INT = NULL,
+	@Name VARCHAR(200),
+	@Surname VARCHAR(200)
 AS
 BEGIN
+	DECLARE	@ERR_MSG AS NVARCHAR(4000) ,@ERR_STATE AS SMALLINT 
+	IF NOT EXISTS (SELECT 1 FROM [dbo].[Author] WHERE Id = ISNULL(@Id,0))
+	BEGIN
+		SET @Id = (SELECT MAX(Id) FROM [dbo].[Author]) + 1
+		BEGIN TRY
+		BEGIN TRANSACTION;
+			INSERT INTO [dbo].[Author] ([Id],[Name],[Surname]) VALUES (@Id, @Name, @Surname)
+		COMMIT TRANSACTION;
+		END TRY
+		BEGIN CATCH
+			ROLLBACK TRANSACTION
+			SELECT @ERR_MSG = 'Procedure Name: ' + OBJECT_NAME(@@PROCID) +'. '+ ERROR_MESSAGE(), @ERR_STATE = ERROR_STATE();
+			THROW 50001, @ERR_MSG, @ERR_STATE;
+		END CATCH;
+	END
+	ELSE
+	BEGIN
+		BEGIN TRY
+		BEGIN TRANSACTION;
+			UPDATE [dbo].[Author] SET
+				[Name] = @Name,
+				[Surname] = @Surname
+			WHERE Id = @Id
+		COMMIT TRANSACTION;
+		END TRY
+		BEGIN CATCH
+			ROLLBACK TRANSACTION
+			SELECT @ERR_MSG = 'Procedure Name: ' + OBJECT_NAME(@@PROCID) +'. '+ ERROR_MESSAGE(), @ERR_STATE = ERROR_STATE();
+			THROW 50001, @ERR_MSG, @ERR_STATE;
+		END CATCH;
+	END
 
-		DECLARE @Message NVARCHAR(MAX) = (SELECT [MessagePattern] FROM [dbo].[BookNotificationStatus] WHERE Id = @NotificationStatusId AND [IsActive]=1);
-		DECLARE @BookName NVARCHAR(500), @SourceUrl NVARCHAR(255), @CreatedDate DATETIME2, @BookState NVARCHAR(MAX);
-		DECLARE @DEFAULT_ESTIMATION_TIME_IF_NOT_FOUND INT = 180; -- 3 min
+	SELECT
+		A.Id AS Id,
+		A.[Name] AS [Name],
+		A.Surname AS Surname,
+		ISNULL('[' + STRING_AGG('{"Id":'+ CAST(B.Id AS VARCHAR(10)) + ',"Title":"'+ B.[Title]+ '","ReleaseDate":"' +FORMAT(B.ReleaseDate, 'yyyy-MM-ddTHH:mm:ss.fff') + '"}',',') WITHIN GROUP (ORDER BY Title) + ']','[]')	AS BooksJson
+	FROM Author A
+	LEFT JOIN AuthorBook BA ON A.Id = BA.AuthorId
+	LEFT JOIN Book B ON BA.BookId = B.Id
+	WHERE A.Id = @Id
+	GROUP BY A.Id, A.[Name], A.Surname
 
-		DECLARE @EstimationTime INT = 0;
-		DECLARE @TextToReplaceWithLink  NVARCHAR(20) = '{{BookLinkTitle}}';
-
-		DECLARE @TextToReplaceWithEstimationTime  NVARCHAR(22) = '{{EstimationTimeText}}';
-		DECLARE @STATISTICWINDOW DATETIME = DATEADD(WEEK, -2, GETUTCDATE())
-
-		DECLARE @Topics TABLE (
-			TopicId INT
-		);
-	
-		INSERT INTO @Topics (TopicId)
-		SELECT JSON_VALUE([value],'$.TopicId') AS TopicId
-		FROM OPENJSON((SELECT [BookState] FROM [dbo].[Book] WHERE Id = @BookId),'$.Topics')
-
-		SELECT @EstimationTime = ISNULL(MAX(a.estTime),@DEFAULT_ESTIMATION_TIME_IF_NOT_FOUND) FROM (
-
-			SELECT t.TopicId, ISNULL(((AVG(DATEDIFF(SECOND,[DateStart],[DateEnd])) + MIN(DATEDIFF(SECOND,[DateStart],[DateEnd])))/2)+1,1) as estTime -- (+1) - to avoid return 0
-			FROM [dbo].[ProgressTimings] pt
-			INNER JOIN @Topics t ON t.TopicId = pt.TopicId
-			WHERE [DateStart] >= @STATISTICWINDOW AND [DateEnd] IS NOT NULL
-			GROUP BY t.TopicId
-		
-		) a
-
-		SELECT 
-			@BookName = CASE WHEN b.BookTypeId = 1 THEN
-				ISNULL(b.[Name] + IIF(c.Ticker IS NOT NULL,' (' + c.Ticker + ')',''),'') 
-			ELSE
-				REPLACE(ISNULL(b.[Name],''),'-',' ')
-			END,
-			@CreatedDate = COAlESCE(b.[UpdatedDateTime],b.[CreatedDateTime],GETUTCDATE()),
-			@SourceUrl = ISNULL(b.[SourceUrl],''),
-			@BookState = ISNULL(b.[BookState],'')
-		FROM 
-			[dbo].[Book] b
-		LEFT JOIN [dbo].[Company] c ON b.CompanyId = c.Id
-		WHERE b.Id = @BookId
-
-		DECLARE @RemainingTime VARCHAR(20) = IIF(@EstimationTime >= 60, CAST(@EstimationTime/60 AS VARCHAR(4))+ ' min', CAST(@EstimationTime AS VARCHAR(2)) + ' sec')
-
-		SET @Message = REPLACE(REPLACE(
-							REPLACE(
-								REPLACE(
-									REPLACE(
-										REPLACE(@Message,'{{text}}',
-											IIF(@NotificationStatusId = 3, @BookName + ' Briefing Book failed to process', -- failed
-												IIF(@NotificationStatusId = 1,@TextToReplaceWithLink + ' approximately ' + @TextToReplaceWithEstimationTime +' remaining', -- in progress
-													@TextToReplaceWithLink))), -- ready
-									'{{timestamp}}',CAST(@CreatedDate AS NVARCHAR(30))),
-								'{{sourceUrl}}',@SourceUrl),
-							'{{error}}','"Book compilation has been failed"'),
-						'{{estimationtime}}',CAST(@EstimationTime AS VARCHAR(10))),
-						'{{linkTitle}}', @BookName + ' Briefing Book')
-
-		IF NOT EXISTS (SELECT 1 FROM [dbo].[BookNotification] WHERE UserId = @UserId AND BookId = @BookId)
-		BEGIN
-
-			BEGIN TRY
-			BEGIN TRANSACTION;
-				INSERT INTO [dbo].[BookNotification]
-					([UserId],[BookId],[NotificationStatusId],[CreatedDateTime],[Message]) 
-				VALUES (@UserId, @BookId, @NotificationStatusId, GETUTCDATE(), @Message)
-
-			COMMIT TRANSACTION;
-		    END TRY
-			BEGIN CATCH
-				 ROLLBACK TRANSACTION;
-			END CATCH;
-		END
-		ELSE
-		BEGIN
-			BEGIN TRY
-			BEGIN TRANSACTION;
-				UPDATE [dbo].[BookNotification] SET
-					[NotificationStatusId] = @NotificationStatusId,
-					[UpdatedDateTime] = GETUTCDATE(),
-					[Message] = @Message,
-					[IsChecked] = ISNULL(@IsChecked,0)
-				WHERE UserId = @UserId AND BookId = @BookId
-
-			COMMIT TRANSACTION;
-		    END TRY
-			BEGIN CATCH
-				 ROLLBACK TRANSACTION;
-			END CATCH;
-		END
-
-		SELECT 
-			 bn.[UserId]
-			,u.[Email] AS [UserEmail]
-			,bn.[BookId]
-			,bn.[NotificationStatusId] as [NotificationStatus]
-			,bn.[Message] AS [MessageJson]
-			,bn.[CreatedDateTime]
-			,bn.[UpdatedDateTime]
-			,bn.[IsChecked]
-			,b.BookTypeId
-			,bt.[Name] AS BookType
-			,b.[CompanyId]
-			,b.[IndividualId]
-			,b.IsQuick
-		FROM [dbo].[BookNotification] bn
-		INNER JOIN [dbo].[User] u ON bn.UserId = u.Id
-		INNER JOIN [dbo].[Book] b ON bn.BookId = b.Id
-		INNER JOIN [dbo].[BookType] bt ON b.BookTypeId = bt.Id
-		WHERE [UserId] = @UserId AND [BookId]=@BookId AND [IsChecked] = 0
-
+	RETURN 0;
 END
-*/
+
+--EXEC [dbo].[sp_Author_CreateOrUpdate] @Id = 2, @Name = 'Lee', @Surname = 'Child'
+--EXEC [dbo].[sp_Author_CreateOrUpdate] @Name = 'Walter', @Surname = 'Scott'
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_Book_CreateOrUpdate]
+	@Id INT = NULL,
+	@Title VARCHAR(200),
+	@ReleaseDate DATETIME,
+	@AuthorIds [dbo].[ListInt] readonly
+AS
+BEGIN
+	DECLARE	@ERR_MSG AS NVARCHAR(4000) ,@ERR_STATE AS SMALLINT 
+	IF NOT EXISTS (SELECT 1 FROM [dbo].[Book] WHERE Id = ISNULL(@Id,0))
+	BEGIN
+		SET @Id = (SELECT MAX(Id) FROM [dbo].[Book]) + 1
+		BEGIN TRY
+		BEGIN TRANSACTION;
+			INSERT INTO [dbo].[Book] ([Id],[Title],[ReleaseDate]) VALUES (@Id, @Title, @ReleaseDate);
+			INSERT INTO [dbo].[AuthorBook] (AuthorId, BookId) SELECT Value, @Id FROM @AuthorIds;
+		COMMIT TRANSACTION;
+		END TRY
+		BEGIN CATCH
+			ROLLBACK TRANSACTION
+			SELECT @ERR_MSG = 'Procedure Name: ' + OBJECT_NAME(@@PROCID) +'. '+ ERROR_MESSAGE(), @ERR_STATE = ERROR_STATE();
+			THROW 50001, @ERR_MSG, @ERR_STATE;
+		END CATCH;
+	END
+	ELSE
+	BEGIN
+		BEGIN TRY
+		BEGIN TRANSACTION;
+			UPDATE [dbo].[Book] SET
+				[Title] = @Title,
+				[ReleaseDate] = @ReleaseDate
+			WHERE Id = @Id;
+			DELETE FROM [dbo].[AuthorBook] WHERE BookId = @Id;
+			INSERT INTO [dbo].[AuthorBook] (AuthorId, BookId) SELECT Value, @Id FROM @AuthorIds;
+		COMMIT TRANSACTION;
+		END TRY
+		BEGIN CATCH
+			ROLLBACK TRANSACTION
+			SELECT @ERR_MSG = 'Procedure Name: ' + OBJECT_NAME(@@PROCID) +'. '+ ERROR_MESSAGE(), @ERR_STATE = ERROR_STATE();
+			THROW 50001, @ERR_MSG, @ERR_STATE;
+		END CATCH;
+	END
+
+    SELECT
+        B.Id AS Id,
+        B.Title AS Title,
+        B.ReleaseDate AS ReleaseDate,
+		'[' + STRING_AGG('{"Id":'+ CAST(A.Id AS VARCHAR(10)) + ',"Name":"'+ A.[Name]+ '","Surname":"' +A.Surname+ '"}',',') WITHIN GROUP (ORDER BY [Surname]) + ']'
+		AS AuthorsJson
+    FROM Book B
+    JOIN AuthorBook BA ON B.Id = BA.BookId
+    JOIN Author A ON BA.AuthorId = A.Id
+	WHERE B.Id = @Id
+	GROUP BY B.Id, B.Title, B.ReleaseDate 
+
+	RETURN 0;
+END
+
+DECLARE @Authors dbo.ListInt;
+--INSERT INTO @Authors (Value) VALUES (5),(2); 
+INSERT INTO @Authors (Value) VALUES (5); 
+EXEC [dbo].[sp_Book_CreateOrUpdate] @Id = 5, @Title = 'Ivanhoe', @ReleaseDate = '1819.12.31 00:00:00.000', @AuthorIds = @Authors

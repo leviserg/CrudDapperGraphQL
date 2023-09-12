@@ -6,5 +6,6 @@ namespace CrudDapperGraphQL.Data.Contracts.Services
     {
         Task<IEnumerable<Author>> GetAuthors(FilterModel filter);
         Task<Author> GetAuthor(int authorId);
+        Task<Author> AuthorSave(Author author);
     }
 }

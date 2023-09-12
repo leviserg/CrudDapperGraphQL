@@ -28,5 +28,18 @@ namespace CrudDapperGraphQL.Services
             }
             return book;
         }
+
+        public async Task<Book> BookSave(Book book)
+        {
+            try
+            {
+                return await _repository.BookSave(book);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw ex;
+            }
+        }
     }
 }

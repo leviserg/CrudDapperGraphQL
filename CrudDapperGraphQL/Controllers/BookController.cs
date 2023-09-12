@@ -1,5 +1,6 @@
 ﻿using CrudDapperGraphQL.Data.Contracts.Services;
 using CrudDapperGraphQL.Data.Models;
+using CrudDapperGraphQL.Services;
 using Microsoft.AspNetCore.Mvc;
 using SendGrid.Helpers.Errors.Model;
 using System.ComponentModel.DataAnnotations;
@@ -45,6 +46,22 @@ namespace CrudDapperGraphQL.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Log or handle unexpected errors
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpPost]
+        [Route("save")]
+        public async Task<IActionResult> BookSave([FromBody] Book book)
+        {
+            try
+            {
+                var savedBook = await _bookService.BookSave(book);
+                return Ok(savedBook);
             }
             catch (Exception ex)
             {

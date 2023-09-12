@@ -52,5 +52,23 @@ namespace CrudDapperGraphQL.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
+        [HttpPost]
+        [Route("save")]
+        public async Task<IActionResult> AuthorSave([FromBody] Author author)
+        {
+            try
+            {
+                var savedAuthor = await _authorService.AuthorSave(author);
+                return Ok(savedAuthor);
+            }
+            catch (Exception ex)
+            {
+                // Log or handle unexpected errors
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+
     }
 }

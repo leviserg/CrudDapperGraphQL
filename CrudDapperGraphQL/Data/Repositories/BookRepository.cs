@@ -1,6 +1,8 @@
 ﻿using CrudDapperGraphQL.Data.Contracts.Repositories;
+using CrudDapperGraphQL.Data.Enums;
 using CrudDapperGraphQL.Data.Models;
 using Dapper;
+using SendGrid.Helpers.Mail;
 using System.Data;
 
 namespace CrudDapperGraphQL.Data.Repositories
@@ -19,7 +21,13 @@ namespace CrudDapperGraphQL.Data.Repositories
             {
                 var books = await connection.QueryAsync<Book>(
                     SpNames.Book_GetAll,
-                    new { filter?.OrderBy, OrderDirection = (int)filter?.OrderDirection },
+                    new {
+                        OrderBy = filter?.OrderBy,
+                        OrderDirection = (int)filter?.OrderDirection,
+                        Limit = filter?.Limit,
+                        Offset = filter?.Offset,
+                        SearchText = filter?.SearchText
+                    },
                     commandType: CommandType.StoredProcedure
                 );
                 return books.ToList();
@@ -36,6 +44,30 @@ namespace CrudDapperGraphQL.Data.Repositories
                     commandType: CommandType.StoredProcedure
                 );
                 return book;
+            }
+        }
+
+        public async Task<Book> BookSave(Book book)
+        {
+            var authorIdsTable = new DataTable();
+            authorIdsTable.Columns.Add("value", typeof(int));
+
+            book.Authors.ForEach(x => { authorIdsTable.Rows.Add(x.Id); });
+
+            using (var connection = _dbContext.CreateConnection())
+            {
+                var result = await connection.QueryAsync<Book>(
+                     SpNames.Book_CreateOrUpdate,
+                     new
+                     {
+                         Id = book.Id,
+                         Title = book.Title,
+                         ReleaseDate = book.ReleaseDate,
+                         AuthorIds = authorIdsTable.AsTableValuedParameter("[dbo].[ListInt]")
+                     },
+                     commandType: CommandType.StoredProcedure
+                 );
+                return result.FirstOrDefault();
             }
         }
 
