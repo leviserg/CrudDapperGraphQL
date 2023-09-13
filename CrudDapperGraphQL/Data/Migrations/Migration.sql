@@ -137,7 +137,7 @@ CREATE OR ALTER PROCEDURE [dbo].[sp_Author_GetAll]
 AS
 BEGIN
 	DECLARE @DEFAULTOrderDirection INT = 1
-	DECLARE @DEFAULTOrderBY VARCHAR(100) = 'Surname'
+	DECLARE @DEFAULTOrderBY VARCHAR(100) = 'Name'
 	DECLARE @IsSearchParam INT = IIF(LEN(ISNULL(@SearchText,''))> 0, 1, 0)
 	DECLARE @CleanSearchText NVARCHAR(MAX) = UPPER(@SearchText) -- TBD - Function with remove spec chars
 	
@@ -155,11 +155,11 @@ BEGIN
 	WHERE @IsSearchParam = 0 OR UPPER(A.[Name]+' '+A.Surname) LIKE '%' + @CleanSearchText + '%'
 	GROUP BY A.Id, A.[Name], A.Surname) a
     ORDER BY
-        CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'Surname' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=1 THEN A.Surname END ASC,
-        CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'Surname' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=2 THEN A.Surname END DESC,
+        CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'Name' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=1 THEN A.[Name]+A.Surname END ASC,
+        CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'Name' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=2 THEN A.[Name]+A.Surname END DESC,
 		CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'BookCount' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=1 THEN BookCount END ASC,
 		CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'BookCount' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=2 THEN BookCount END DESC,
-		A.Surname ASC
+		A.[Name]+A.Surname ASC
 	OFFSET @Offset ROWS
 	FETCH NEXT @Limit ROWS ONLY
 RETURN 0;

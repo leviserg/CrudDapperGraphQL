@@ -47,17 +47,12 @@ namespace CrudDapperGraphQL.Data.Repositories
             }
         }
 
-        public async Task<Author> AuthorSave(Author author)
+        public async Task<Author> AuthorSave(AuthorSave author)
         {
             using (var connection = _dbContext.CreateConnection())
             {
                 var result = await connection.QueryAsync<Author>(
-                     SpNames.Author_CreateOrUpdate,
-                     new { 
-                         Id = author.Id,
-                         Name = author.Name,
-                         Surname = author.Surname
-                     },
+                     SpNames.Author_CreateOrUpdate, author,
                      commandType: CommandType.StoredProcedure
                  );
                 return result.FirstOrDefault();

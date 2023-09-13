@@ -55,7 +55,7 @@ namespace CrudDapperGraphQL.Controllers
 
         [HttpPost]
         [Route("save")]
-        public async Task<IActionResult> AuthorSave([FromBody] Author author)
+        public async Task<IActionResult> AuthorSave([FromBody] AuthorSave author)
         {
             try
             {

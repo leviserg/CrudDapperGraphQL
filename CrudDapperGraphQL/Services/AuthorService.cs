@@ -28,7 +28,7 @@ namespace CrudDapperGraphQL.Services
             return author;
         }
 
-        public async Task<Author> AuthorSave(Author author)
+        public async Task<Author> AuthorSave(AuthorSave author)
         {
             try {
                 return await _repository.AuthorSave(author);

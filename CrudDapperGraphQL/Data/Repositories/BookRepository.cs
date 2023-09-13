@@ -47,12 +47,12 @@ namespace CrudDapperGraphQL.Data.Repositories
             }
         }
 
-        public async Task<Book> BookSave(Book book)
+        public async Task<Book> BookSave(BookSave book)
         {
             var authorIdsTable = new DataTable();
             authorIdsTable.Columns.Add("value", typeof(int));
 
-            book.Authors.ForEach(x => { authorIdsTable.Rows.Add(x.Id); });
+            book.AuthorIds.ForEach(x => { authorIdsTable.Rows.Add(x); });
 
             using (var connection = _dbContext.CreateConnection())
             {
