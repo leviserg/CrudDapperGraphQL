@@ -303,11 +303,10 @@ BEGIN
         B.Id AS Id,
         B.Title AS Title,
         B.ReleaseDate AS ReleaseDate,
-		'[' + STRING_AGG('{"Id":'+ CAST(A.Id AS VARCHAR(10)) + ',"Name":"'+ A.[Name]+ '","Surname":"' +A.Surname+ '"}',',') WITHIN GROUP (ORDER BY [Surname]) + ']'
-		AS AuthorsJson
+		ISNULL('[' + STRING_AGG('{"Id":'+ CAST(A.Id AS VARCHAR(10)) + ',"Name":"'+ A.[Name]+ '","Surname":"' +A.Surname+ '"}',',') WITHIN GROUP (ORDER BY [Surname]) + ']','[]') AS AuthorsJson
     FROM Book B
-    JOIN AuthorBook BA ON B.Id = BA.BookId
-    JOIN Author A ON BA.AuthorId = A.Id
+    LEFT JOIN AuthorBook BA ON B.Id = BA.BookId
+    LEFT JOIN Author A ON BA.AuthorId = A.Id
 	WHERE B.Id = @Id
 	GROUP BY B.Id, B.Title, B.ReleaseDate 
 
