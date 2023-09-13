@@ -1,7 +1,9 @@
-﻿using CrudDapperGraphQL.Data.Contracts.Repositories;
+﻿using CrudDapperGraphQL.Data;
+using CrudDapperGraphQL.Data.Contracts.Repositories;
 using CrudDapperGraphQL.Data.Contracts.Services;
 using CrudDapperGraphQL.Data.Models;
 using SendGrid.Helpers.Errors.Model;
+using System.Data;
 
 namespace CrudDapperGraphQL.Services
 {
@@ -38,6 +40,11 @@ namespace CrudDapperGraphQL.Services
                 Console.WriteLine(ex);
                 throw ex;
             }
+        }
+
+        public async Task<bool> AuthorDelete(int authorId)
+        {
+            return await _repository.AuthorDelete(authorId);
         }
     }
 }

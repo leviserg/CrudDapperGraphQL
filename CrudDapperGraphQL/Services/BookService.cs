@@ -41,5 +41,10 @@ namespace CrudDapperGraphQL.Services
                 throw ex;
             }
         }
+
+        public async Task<bool> BookDelete(int bookId)
+        {
+            return await _repository.BookDelete(bookId);
+        }
     }
 }

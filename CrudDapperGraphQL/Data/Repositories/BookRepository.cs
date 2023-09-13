@@ -71,5 +71,24 @@ namespace CrudDapperGraphQL.Data.Repositories
             }
         }
 
+        public async Task<bool> BookDelete(int bookId)
+        {
+            try
+            {
+                using (var connection = _dbContext.CreateConnection())
+                {
+                    var result = await connection.QueryAsync<Author>(
+                         SpNames.Book_Delete, new { Id = bookId },
+                         commandType: CommandType.StoredProcedure
+                     );
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
     }
 }

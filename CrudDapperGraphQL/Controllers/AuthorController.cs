@@ -69,6 +69,13 @@ namespace CrudDapperGraphQL.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<IActionResult> AuthorDelete(int id)
+        {
+            var result = await _authorService.AuthorDelete(id);
+            return (result) ? Ok(true) : StatusCode(409, "Conflict");
+        }
 
     }
 }

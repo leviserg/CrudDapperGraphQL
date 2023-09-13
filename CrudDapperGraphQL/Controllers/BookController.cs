@@ -69,5 +69,13 @@ namespace CrudDapperGraphQL.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<IActionResult> BookDelete(int id)
+        {
+            var result = await _bookService.BookDelete(id);
+            return (result) ? Ok(true) : StatusCode(409, "Conflict");
+        }
     }
 }

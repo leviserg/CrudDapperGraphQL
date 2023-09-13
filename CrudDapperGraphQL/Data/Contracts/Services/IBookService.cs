@@ -7,5 +7,6 @@ namespace CrudDapperGraphQL.Data.Contracts.Services
         Task<IEnumerable<Book>> GetBooks(FilterModel filter);
         Task<Book> GetBook(int bookId);
         Task<Book> BookSave(BookSave book);
+        Task<bool> BookDelete(int bookId);
     }
 }
