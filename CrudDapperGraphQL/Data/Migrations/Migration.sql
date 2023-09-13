@@ -17,7 +17,8 @@ VALUES
 (1,'Arthur','Doile'),
 (2,'Lee','Child'),
 (3,'Robert','Sedgewick'),
-(4,'Kevin','Wayne')
+(4,'Kevin','Wayne'),
+(5,'Mark','Twain');
 
 DROP TABLE IF EXISTS Book
 
@@ -33,7 +34,9 @@ VALUES
 (1,'The Case Notes of Sherlock Holmes','2020-05-12 00:00:00.000'),
 (2,'No Plan B','2022-05-12 00:00:00.000'),
 (3,'One shot','2005-04-05 00:00:00.000'),
-(4,'Algorithms','2011-03-01 00:00:00.000')
+(4,'Algorithms','2011-03-01 00:00:00.000'),
+(5,'The Adventures of Tom Sawyer','1876-09-10 00:00:00.000'),
+(6,'Adventures of Huckleberry Finn','1885-07-05 00:00:00.000');
 
 CREATE TABLE AuthorBook (
 	AuthorId INT NOT NULL,
@@ -49,7 +52,9 @@ VALUES
 (2,2),
 (2,3),
 (3,4),
-(4,4);
+(4,4),
+(5,5),
+(5,6);
 GO
 /*
 SELECT 
