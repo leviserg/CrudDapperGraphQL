@@ -1,9 +1,11 @@
 ﻿using CrudDapperGraphQL.Data;
 using CrudDapperGraphQL.Data.Contracts.Repositories;
 using CrudDapperGraphQL.Data.Contracts.Services;
+using CrudDapperGraphQL.Data.GraphQL;
 using CrudDapperGraphQL.Data.Repositories;
 using CrudDapperGraphQL.Services;
 using Microsoft.Extensions.Configuration;
+using HotChocolate;
 
 namespace CrudDapperGraphQL.AppStart
 {
@@ -21,6 +23,12 @@ namespace CrudDapperGraphQL.AppStart
             services.AddTransient<IBookService, BookService>();
 
             services.AddControllers();
+
+            // GraphQL
+            services.AddHttpClient<BookRepository>();
+            services.AddHttpClient<BookService>();
+            services.AddGraphQLServer().AddQueryType<Query>();
+            
         }
     }
 }

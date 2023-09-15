@@ -14,12 +14,12 @@ namespace CrudDapperGraphQL.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<Book>> GetBooks(FilterModel filter)
+        public async Task<IEnumerable<Book>> GetBooks(FilterModel filter, CancellationToken cancellationToken = default)
         {
             return await _repository.GetBooks(filter);
         }
 
-        public async Task<Book> GetBook(int bookId)
+        public async Task<Book> GetBook(int bookId, CancellationToken cancellationToken = default)
         {
             var book = await _repository.GetBook(bookId);
             if (book == null)
