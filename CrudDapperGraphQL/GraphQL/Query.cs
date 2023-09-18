@@ -1,7 +1,7 @@
 ﻿using CrudDapperGraphQL.Data.Contracts.Services;
 using CrudDapperGraphQL.Data.Models;
 
-namespace CrudDapperGraphQL.Data.GraphQL
+namespace CrudDapperGraphQL.GraphQL
 {
     public class Query
     {

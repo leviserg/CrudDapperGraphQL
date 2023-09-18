@@ -1,8 +1,8 @@
 ﻿using CrudDapperGraphQL.Data;
 using CrudDapperGraphQL.Data.Contracts.Repositories;
 using CrudDapperGraphQL.Data.Contracts.Services;
-using CrudDapperGraphQL.Data.GraphQL;
 using CrudDapperGraphQL.Data.Repositories;
+using CrudDapperGraphQL.GraphQL;
 using CrudDapperGraphQL.Services;
 
 namespace CrudDapperGraphQL.AppStart

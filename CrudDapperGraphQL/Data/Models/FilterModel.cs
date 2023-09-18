@@ -1,5 +1,4 @@
 ﻿using CrudDapperGraphQL.Data.Enums;
-using CrudDapperGraphQL.Data.GraphQL;
 
 namespace CrudDapperGraphQL.Data.Models
 {
