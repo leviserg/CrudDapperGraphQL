@@ -1,6 +1,6 @@
 ﻿namespace CrudDapperGraphQL.Data.Enums
 {
-    public enum OrderDirection
+    public enum OrderDirectionEnum
     {
         ASC = 1,
         DESC = 2

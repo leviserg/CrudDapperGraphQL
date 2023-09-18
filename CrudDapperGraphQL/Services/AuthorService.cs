@@ -1,9 +1,7 @@
-﻿using CrudDapperGraphQL.Data;
-using CrudDapperGraphQL.Data.Contracts.Repositories;
+﻿using CrudDapperGraphQL.Data.Contracts.Repositories;
 using CrudDapperGraphQL.Data.Contracts.Services;
 using CrudDapperGraphQL.Data.Models;
 using SendGrid.Helpers.Errors.Model;
-using System.Data;
 
 namespace CrudDapperGraphQL.Services
 {
@@ -15,12 +13,12 @@ namespace CrudDapperGraphQL.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<Author>> GetAuthors(FilterModel filter)
+        public async Task<IEnumerable<Author>> GetAuthors(FilterModel filter, CancellationToken cancellationToken = default)
         {
             return await _repository.GetAuthors(filter);
         }
 
-        public async Task<Author> GetAuthor(int authorId)
+        public async Task<Author> GetAuthor(int authorId, CancellationToken cancellationToken = default)
         {
             var author = await _repository.GetAuthor(authorId);
             if (author == null)

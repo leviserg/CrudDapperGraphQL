@@ -1,62 +1,48 @@
-﻿using CrudDapperGraphQL.Data.Models;
-using CrudDapperGraphQL.Services;
-using HotChocolate;
+﻿using CrudDapperGraphQL.Data.Contracts.Services;
+using CrudDapperGraphQL.Data.Enums;
+using CrudDapperGraphQL.Data.Models;
+using System.Collections.Generic;
 
 namespace CrudDapperGraphQL.Data.GraphQL
 {
     public class Query
     {
         public Task<IEnumerable<Book>> getBooks(
-        [Service] BookService service,
-        [ScopedService] CancellationToken cancellationToken)
+            [Service(ServiceKind.Synchronized)] IBookService service,
+            FilterModel? filter,
+            CancellationToken cancellationToken
+        )
         {
-            FilterModel filter = new FilterModel();
-            return service.GetBooks(filter,cancellationToken);
+            FilterModel filterInput = filter?.ToCompleteFilterModel(filter) ?? new FilterModel();
+            return service.GetBooks(filterInput, cancellationToken);
         }
 
-        public Task<Book> getBookById(
-            [Service] BookService service,
+        public Task<Book> getBook(
+            [Service] IBookService service,
             int id,
             CancellationToken cancellationToken)
         {
             return service.GetBook(id, cancellationToken);
         }
-        
-    }
 
-    /*
-    // QueryType.cs
-    public class QueryType : ObjectType<Query>
-    {
-        protected override void Configure(IObjectTypeDescriptor<Query> descriptor)
+        public Task<IEnumerable<Author>> getAuthors(
+            [Service] IAuthorService service,
+            FilterModel? filter,
+            CancellationToken cancellationToken
+        )
         {
-            descriptor
-                .Field(f => f.getBookById(default!, default!, default!))
-                .Type<BookType>();
+            FilterModel filterInput = filter?.ToCompleteFilterModel(filter) ?? new FilterModel();
+            return service.GetAuthors(filterInput, cancellationToken);
+        }
 
-            descriptor
-                .Field(f => f.getBooks(default!, null, default!))
-                .Type<ListType<BookType>>();
+        public Task<Author> getAuthor(
+            [Service] IAuthorService service,
+            int id,
+            CancellationToken cancellationToken)
+        {
+            return service.GetAuthor(id, cancellationToken);
         }
     }
 
-    // TodoType.cs
-    public class BookType : ObjectType<Book>
-    {
-        protected override void Configure(IObjectTypeDescriptor<Book> descriptor)
-        {
-            descriptor
-                .Field(f => f.Id)
-                .Type<IntType>();
 
-            descriptor
-                .Field(f => f.Title)
-                .Type<StringType>();
-
-            descriptor
-                .Field(f => f.ReleaseDate)
-                .Type<DateTimeType>();
-        }
-    }
-    */
 }

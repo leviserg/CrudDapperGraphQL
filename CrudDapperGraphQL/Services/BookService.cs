@@ -2,7 +2,6 @@
 using CrudDapperGraphQL.Data.Contracts.Services;
 using CrudDapperGraphQL.Data.Models;
 using SendGrid.Helpers.Errors.Model;
-using static Dapper.SqlMapper;
 
 namespace CrudDapperGraphQL.Services
 {
