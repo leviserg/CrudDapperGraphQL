@@ -4,9 +4,6 @@ using CrudDapperGraphQL.Data.Contracts.Services;
 using CrudDapperGraphQL.Data.GraphQL;
 using CrudDapperGraphQL.Data.Repositories;
 using CrudDapperGraphQL.Services;
-using Microsoft.Extensions.Configuration;
-using HotChocolate;
-using CrudDapperGraphQL.Data.Models;
 
 namespace CrudDapperGraphQL.AppStart
 {
@@ -29,8 +26,8 @@ namespace CrudDapperGraphQL.AppStart
             services.AddGraphQLServer()
                 .RegisterService<IBookService>()
                 .RegisterService<IAuthorService>()
-                .AddQueryType<Query>();
-
+                .AddQueryType<Query>()
+                .AddMutationType<Mutation>();
 
         }
     }

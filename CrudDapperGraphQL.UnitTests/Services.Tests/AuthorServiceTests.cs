@@ -70,7 +70,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             var authorToSave = new AuthorSave { Id = -1, Name = "Daniel", Surname = "Defoe" };
 
             var expectedSavedAuthor = new Author { 
-                Id = -authorToSave.Id, 
+                Id = authorToSave.Id.Value, 
                 Name = authorToSave.Name, 
                 Surname = authorToSave.Surname, 
                 BooksJson = "[]" 

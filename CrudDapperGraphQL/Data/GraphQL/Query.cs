@@ -1,46 +1,36 @@
 ﻿using CrudDapperGraphQL.Data.Contracts.Services;
-using CrudDapperGraphQL.Data.Enums;
 using CrudDapperGraphQL.Data.Models;
-using System.Collections.Generic;
 
 namespace CrudDapperGraphQL.Data.GraphQL
 {
     public class Query
     {
-        public Task<IEnumerable<Book>> getBooks(
-            [Service(ServiceKind.Synchronized)] IBookService service,
-            FilterModel? filter,
-            CancellationToken cancellationToken
+        public async Task<IEnumerable<Book>> getBooks(
+            [Service(ServiceKind.Synchronized)] IBookService service, FilterModel? filter
         )
         {
             FilterModel filterInput = filter?.ToCompleteFilterModel(filter) ?? new FilterModel();
-            return service.GetBooks(filterInput, cancellationToken);
+            return await service.GetBooks(filterInput);
         }
 
-        public Task<Book> getBook(
-            [Service] IBookService service,
-            int id,
-            CancellationToken cancellationToken)
+        public async Task<Book> getBook(
+            [Service] IBookService service, int id)
         {
-            return service.GetBook(id, cancellationToken);
+            return await service.GetBook(id);
         }
 
-        public Task<IEnumerable<Author>> getAuthors(
-            [Service] IAuthorService service,
-            FilterModel? filter,
-            CancellationToken cancellationToken
+        public async Task<IEnumerable<Author>> getAuthors(
+            [Service] IAuthorService service, FilterModel? filter
         )
         {
             FilterModel filterInput = filter?.ToCompleteFilterModel(filter) ?? new FilterModel();
-            return service.GetAuthors(filterInput, cancellationToken);
+            return await service.GetAuthors(filterInput);
         }
 
-        public Task<Author> getAuthor(
-            [Service] IAuthorService service,
-            int id,
-            CancellationToken cancellationToken)
+        public async Task<Author> getAuthor(
+            [Service] IAuthorService service, int id)
         {
-            return service.GetAuthor(id, cancellationToken);
+            return await service.GetAuthor(id);
         }
     }
 

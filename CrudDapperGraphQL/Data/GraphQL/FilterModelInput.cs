@@ -1,10 +1,11 @@
 ﻿using CrudDapperGraphQL.Data.Enums;
+using CrudDapperGraphQL.Data.Models;
 
 namespace CrudDapperGraphQL.Data.GraphQL
 {
-    public class SchemaTypes : ObjectType
+    public class FilterModelInput : ObjectType<FilterModel>
     {
-        protected override void Configure(IObjectTypeDescriptor descriptor)
+        protected override void Configure(IObjectTypeDescriptor<FilterModel> descriptor)
         {
             // FilterModelInputType
             descriptor.Name("FilterModelInput");
@@ -13,7 +14,6 @@ namespace CrudDapperGraphQL.Data.GraphQL
             descriptor.Field("limit").Type<IntType>();
             descriptor.Field("offset").Type<IntType>();
             descriptor.Field("searchText").Type<StringType>();
-
         }
     }
 }
