@@ -1,6 +1,6 @@
 ﻿using CrudDapperGraphQL.Data.Models;
 
-namespace CrudDapperGraphQL.Data.GraphQL
+namespace CrudDapperGraphQL.Data.GraphQL.InputTypes
 {
     public class AuthorSaveInput : ObjectType<Author>
     {
