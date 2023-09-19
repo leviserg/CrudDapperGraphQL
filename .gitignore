@@ -12,3 +12,7 @@
 /CrudDapperGraphQL.UnitTests/obj/Debug/net6.0/.NETCoreApp,Version=v6.0.AssemblyAttributes.cs
 /CrudDapperGraphQL.UnitTests/obj/Debug/net6.0
 /CrudDapperGraphQL.UnitTests/obj
+/KeyGenerator/bin/Debug/net6.0
+/KeyGenerator/obj/Debug/net6.0
+/KeyGenerator/obj
+/CrudDapperGraphQL/ReadMeAuthWorkVersion.txt

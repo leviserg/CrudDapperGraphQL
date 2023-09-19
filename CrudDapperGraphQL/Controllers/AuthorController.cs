@@ -1,8 +1,8 @@
 ﻿using CrudDapperGraphQL.Data.Contracts.Services;
 using CrudDapperGraphQL.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SendGrid.Helpers.Errors.Model;
-using System.ComponentModel.DataAnnotations;
 
 namespace CrudDapperGraphQL.Controllers
 {
@@ -18,6 +18,7 @@ namespace CrudDapperGraphQL.Controllers
 
         [HttpGet]
         [Route("all")]
+        [Authorize]
         public async Task<IActionResult> GetAuthors([FromQuery] FilterModel filter)
         {
             try
@@ -35,6 +36,7 @@ namespace CrudDapperGraphQL.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> GetAuthor(int id)
         {
             try
@@ -55,6 +57,7 @@ namespace CrudDapperGraphQL.Controllers
 
         [HttpPost]
         [Route("save")]
+        [Authorize]
         public async Task<IActionResult> AuthorSave([FromBody] AuthorSave author)
         {
             try
@@ -71,6 +74,7 @@ namespace CrudDapperGraphQL.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> AuthorDelete(int id)
         {
             var result = await _authorService.AuthorDelete(id);
