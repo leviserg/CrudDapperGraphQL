@@ -1,8 +1,10 @@
 ﻿using CrudDapperGraphQL.Data.Contracts.Services;
 using CrudDapperGraphQL.Data.Models;
+using HotChocolate.Authorization;
 
 namespace CrudDapperGraphQL.GraphQL
 {
+    [Authorize]
     public class Mutation
     {
         public async Task<Book> saveBook(

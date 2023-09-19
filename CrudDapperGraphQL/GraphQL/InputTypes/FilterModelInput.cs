@@ -14,6 +14,7 @@ namespace CrudDapperGraphQL.GraphQL.InputTypes
             descriptor.Field("limit").Type<IntType>();
             descriptor.Field("offset").Type<IntType>();
             descriptor.Field("searchText").Type<StringType>();
+            descriptor.Authorize();
         }
     }
 }

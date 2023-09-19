@@ -1,8 +1,10 @@
 ﻿using CrudDapperGraphQL.Data.Contracts.Services;
 using CrudDapperGraphQL.Data.Models;
+using HotChocolate.Authorization;
 
 namespace CrudDapperGraphQL.GraphQL
 {
+    [Authorize]
     public class Query
     {
         public async Task<IEnumerable<Book>> getBooks(
@@ -10,7 +12,14 @@ namespace CrudDapperGraphQL.GraphQL
         )
         {
             FilterModel filterInput = filter?.ToCompleteFilterModel(filter) ?? new FilterModel();
-            return await service.GetBooks(filterInput);
+            try
+            {
+                return await service.GetBooks(filterInput);
+            }
+            catch(UnauthorizedAccessException ex)
+            {
+                throw new UnauthorizedAccessException(ex.Message);
+            }
         }
 
         public async Task<Book> getBook(

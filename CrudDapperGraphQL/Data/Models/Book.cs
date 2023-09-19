@@ -1,8 +1,10 @@
-﻿using System.Text.Json;
+﻿using HotChocolate.Authorization;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace CrudDapperGraphQL.Data.Models
 {
+    [Authorize]
     public class Book
     {
         public int Id { get; set; }

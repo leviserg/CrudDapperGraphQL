@@ -8,6 +8,7 @@ using CrudDapperGraphQL.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace CrudDapperGraphQL.AppStart
 {
@@ -75,22 +76,49 @@ namespace CrudDapperGraphQL.AppStart
                     .Build();
             });
 
+            // Swagger
 
+            services.AddEndpointsApiExplorer();
 
+            services.AddSwaggerGen(c =>
+            {
 
+                // Add security definition for Bearer token
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
 
-
-
+                // Add a global security requirement for Bearer token
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+            });
 
 
             // GraphQL
             services.AddGraphQLServer()
                 .RegisterService<IBookService>()
                 .RegisterService<IAuthorService>()
+                .AddAuthorization()
                 .AddQueryType<Query>()
-                .AddMutationType<Mutation>();
-
-
+                .AddMutationType<Mutation>()
+                .AddErrorFilter<AuthorizationErrorFilter>();
 
         }
     }

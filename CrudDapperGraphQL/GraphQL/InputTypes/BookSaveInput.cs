@@ -12,6 +12,7 @@ namespace CrudDapperGraphQL.GraphQL.InputTypes
             descriptor.Field("title").Type<StringType>();
             descriptor.Field("releaseDate").Type<DateTimeType>();
             descriptor.Field("authorIds").Type<ListType<IntType>>();
+            descriptor.Authorize();
 
         }
     }

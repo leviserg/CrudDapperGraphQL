@@ -11,6 +11,8 @@ namespace CrudDapperGraphQL.GraphQL.InputTypes
             descriptor.Field("id").Type<IntType>();
             descriptor.Field("name").Type<StringType>();
             descriptor.Field("surname").Type<StringType>();
+            descriptor.Authorize();
+
         }
     }
 }
