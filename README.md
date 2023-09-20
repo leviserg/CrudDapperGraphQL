@@ -5,4 +5,5 @@
 <li>Many-to-Many entity relations (Books<->Authors) example</li>
 <li><a href="https://chillicream.com/docs/hotchocolate/v13">HotChocolate</a></li>
 <li>MSTest unit tests + Moq</li>
+<li>JWT Bearer authorization</li>
 </ul>
