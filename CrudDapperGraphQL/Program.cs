@@ -13,6 +13,8 @@ builder.Services.Configure<ApiUser>(builder.Configuration.GetSection("ApiService
 
 var app = builder.Build();
 
+await ApplicationSetup.InitializeAuthOptionsAsync(app.Services);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

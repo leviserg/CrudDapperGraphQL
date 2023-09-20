@@ -360,3 +360,25 @@ BEGIN
 	RETURN 0;
 END
 GO
+
+DROP TABLE IF EXISTS AuthKey;
+
+CREATE TABLE AuthKey (
+	Id INT NOT NULL,
+	PublicKeyString NVARCHAR(MAX),
+	PrivateKeyString NVARCHAR(MAX),
+	UpdatedTime DATETIME DEFAULT GETDATE(),
+	CONSTRAINT PK_AuthKey_Id PRIMARY KEY CLUSTERED (Id ASC)
+);
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_Auth_GetKeys]
+AS
+BEGIN
+	SELECT TOP 1
+		PublicKeyString,
+		PrivateKeyString
+	FROM AuthKey
+	RETURN 0;
+END
+GO

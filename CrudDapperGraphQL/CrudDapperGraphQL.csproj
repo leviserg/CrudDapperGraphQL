@@ -22,8 +22,4 @@
     <Folder Include="Attributes\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\KeyGenerator\KeyGenerator.csproj" />
-  </ItemGroup>
-
 </Project>
