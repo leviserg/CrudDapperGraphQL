@@ -5,7 +5,6 @@
 	- HotChocolate.AspNetCore
 	- HotChocolate.Server
 2. See Migrations/Migration script (TBD - with package FluentMigrator.Runner)
-Authorization : apiuser / apiuser
 3. Queries:
 ==============================
     query {
