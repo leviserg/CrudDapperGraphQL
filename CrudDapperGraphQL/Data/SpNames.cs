@@ -15,6 +15,5 @@
         public const string Book_Delete = "[dbo].[sp_Book_Delete]";
         public const string Author_Delete = "[dbo].[sp_Author_Delete]";
 
-        public const string Auth_GetKeys = "[dbo].[sp_Auth_GetKeys]";
     }
 }

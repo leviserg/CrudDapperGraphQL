@@ -5,11 +5,12 @@ namespace CrudDapperGraphQL.AppStart
 {
     public static class ApplicationSetup
     {
-        public static async Task InitializeAuthOptionsAsync(IServiceProvider serviceProvider)
+        public static async Task InitializeOptionsAsync(IServiceProvider serviceProvider)
         {
-            var authConfigurationService = serviceProvider.GetRequiredService<IAuthConfigurationService>();
-            var secretKeysModel = await authConfigurationService.GetSecretKeys();
-            AuthOptions.Initialize(secretKeysModel);
+            //var _service = serviceProvider.GetRequiredService<IAuthorService>();
+            AuthOptions.Initialize();
+
+            await Task.CompletedTask;
         }
     }
 }

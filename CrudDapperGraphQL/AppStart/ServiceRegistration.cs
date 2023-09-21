@@ -18,7 +18,6 @@ namespace CrudDapperGraphQL.AppStart
         {
 
             services.AddSingleton<ApplicationDbContext>();
-            services.AddSingleton<IAuthConfigurationService, DbAuthConfigurationService>();
 
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IBookRepository, BookRepository>();

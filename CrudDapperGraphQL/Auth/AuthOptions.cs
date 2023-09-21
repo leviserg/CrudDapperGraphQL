@@ -11,10 +11,15 @@ namespace CrudDapperGraphQL.Auth
         public static SecurityKey PublicKey { get; set; }
         public static SecurityKey PrivateKey { get; set; }
 
-        public static void Initialize(SecretKeysModel secretKeys)
+        public static void Initialize()
         {
-            PublicKey = GetPublicKey(secretKeys.PublicKeyString);
-            PrivateKey = GetPrivateKey(secretKeys.PrivateKeyString);
+
+            using var key = RSA.Create();
+            string PublicKeyString = Convert.ToBase64String(key.ExportRSAPublicKey());
+            string PrivateKeyString = Convert.ToBase64String(key.ExportRSAPrivateKey());
+
+            PublicKey = GetPublicKey(PublicKeyString);
+            PrivateKey = GetPrivateKey(PrivateKeyString);
         }
 
         private static SecurityKey GetPrivateKey(string keyString)
