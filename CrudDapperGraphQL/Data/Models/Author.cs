@@ -10,10 +10,10 @@ namespace CrudDapperGraphQL.Data.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
+        public int TotalCount { get; set; }
 
         [JsonIgnore]
         public string BooksJson { get; set; }
-
         public List<Book> Books => !string.IsNullOrEmpty(BooksJson) ? JsonSerializer.Deserialize<List<Book>>(BooksJson) : null;
     }
 }

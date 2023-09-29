@@ -81,17 +81,25 @@ BEGIN
 	DECLARE @IsSearchParam INT = IIF(LEN(ISNULL(@SearchText,''))> 0, 1, 0)
 	DECLARE @CleanSearchText NVARCHAR(MAX) = UPPER(@SearchText) -- TBD - Function with remove spec chars
 
+	;WITH TotalCountCTE AS (
+		SELECT COUNT(*) AS TotalCount
+		FROM Book B
+		WHERE @IsSearchParam = 0 OR UPPER(B.Title) LIKE '%' + @CleanSearchText + '%' 
+	)
+
     SELECT
         B.Id AS Id,
         B.Title AS Title,
         B.ReleaseDate AS ReleaseDate,
 		ISNULL('[' + STRING_AGG('{"Id":'+ CAST(A.Id AS VARCHAR(10)) + ',"Name":"'+ A.[Name]+ '","Surname":"' +A.Surname+ '"}',',') WITHIN GROUP (ORDER BY [Surname]) + ']','[]')
-		AS AuthorsJson
+		AS AuthorsJson,
+		tc.TotalCount
     FROM Book B
     LEFT JOIN AuthorBook BA ON B.Id = BA.BookId
     LEFT JOIN Author A ON BA.AuthorId = A.Id
+	CROSS JOIN TotalCountCTE tc
 	WHERE @IsSearchParam = 0 OR UPPER(B.Title) LIKE '%' + @CleanSearchText + '%' 
-	GROUP BY B.Id, B.Title, B.ReleaseDate
+	GROUP BY B.Id, B.Title, B.ReleaseDate, tc.TotalCount
     ORDER BY
         CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'Title' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=1 THEN B.Title END ASC,
         CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'Title' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=2 THEN B.Title END DESC,
@@ -141,8 +149,14 @@ BEGIN
 	DECLARE @DEFAULTOrderBY VARCHAR(100) = 'Name'
 	DECLARE @IsSearchParam INT = IIF(LEN(ISNULL(@SearchText,''))> 0, 1, 0)
 	DECLARE @CleanSearchText NVARCHAR(MAX) = UPPER(@SearchText) -- TBD - Function with remove spec chars
+
+	;WITH TotalCountCTE AS (
+		SELECT COUNT(*) AS TotalCount
+		FROM Author A
+		WHERE @IsSearchParam = 0 OR UPPER(A.[Name]+' '+A.Surname) LIKE '%' + @CleanSearchText + '%'
+	)
 	
-	SELECT Id, [Name], Surname, BooksJson FROM
+	SELECT Id, [Name], Surname, BooksJson, tc.TotalCount FROM
     (SELECT
         A.Id AS Id,
         A.[Name] AS [Name],
@@ -155,6 +169,7 @@ BEGIN
     LEFT JOIN Book B ON BA.BookId = B.Id
 	WHERE @IsSearchParam = 0 OR UPPER(A.[Name]+' '+A.Surname) LIKE '%' + @CleanSearchText + '%'
 	GROUP BY A.Id, A.[Name], A.Surname) a
+	CROSS JOIN TotalCountCTE tc
     ORDER BY
         CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'Name' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=1 THEN A.[Name]+A.Surname END ASC,
         CASE WHEN ISNULL(@OrderBy,@DEFAULTOrderBY) = 'Name' AND ISNULL(@OrderDirection,@DEFAULTOrderDirection)=2 THEN A.[Name]+A.Surname END DESC,

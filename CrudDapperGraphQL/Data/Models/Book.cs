@@ -10,6 +10,7 @@ namespace CrudDapperGraphQL.Data.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public int TotalCount { get; set; }
 
         [JsonIgnore]
         public string AuthorsJson { get; set; }
