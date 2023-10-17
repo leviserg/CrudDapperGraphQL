@@ -9,7 +9,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
     [TestClass]
     public class AuthorServiceTests
     {
-        private readonly Mock<IAuthorRepository> _repositoryMock = new Mock<IAuthorRepository>();
+        private readonly Mock<IRepository<Author, AuthorSave>> _repositoryMock = new Mock<IRepository<Author, AuthorSave>>();
 
         [TestMethod]
         public async Task GetAuthors_ReturnsAuthors()
@@ -19,7 +19,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             var filter = new FilterModel();
             var expectedAuthor = new Author { Id = 1, Name = "Daniel", Surname = "Defoe", BooksJson = "[]" };
 
-            _repositoryMock.Setup(repo => repo.GetAuthors(filter)).ReturnsAsync(new List<Author> { expectedAuthor });
+            _repositoryMock.Setup(repo => repo.GetAll(filter)).ReturnsAsync(new List<Author> { expectedAuthor });
 
             // Act
             var result = await service.GetAuthors(filter);
@@ -37,7 +37,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             int authorId = 1;
             var expectedAuthor = new Author { Id = authorId, Name = "Daniel", Surname = "Defoe" , BooksJson = "[]" };
 
-            _repositoryMock.Setup(repo => repo.GetAuthor(authorId)).ReturnsAsync(expectedAuthor);
+            _repositoryMock.Setup(repo => repo.GetById(authorId)).ReturnsAsync(expectedAuthor);
 
             // Act
             var result = await service.GetAuthor(authorId);
@@ -56,7 +56,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             int authorId = -1;
             Author expectedAuthor = null;
 
-            _repositoryMock.Setup(repo => repo.GetAuthor(authorId)).ReturnsAsync(expectedAuthor);
+            _repositoryMock.Setup(repo => repo.GetById(authorId)).ReturnsAsync(expectedAuthor);
 
             // Act and Assert
             await service.GetAuthor(authorId); // throw Not Found Exception
@@ -76,7 +76,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
                 BooksJson = "[]" 
             };
 
-            _repositoryMock.Setup(repo => repo.AuthorSave(authorToSave)).ReturnsAsync(expectedSavedAuthor);
+            _repositoryMock.Setup(repo => repo.Save(authorToSave)).ReturnsAsync(expectedSavedAuthor);
 
             // Act
             var result = await service.AuthorSave(authorToSave);
@@ -93,7 +93,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             var service = new AuthorService(_repositoryMock.Object);
             int authorId = -1;
 
-            _repositoryMock.Setup(repo => repo.AuthorDelete(authorId)).ReturnsAsync(true);
+            _repositoryMock.Setup(repo => repo.Delete(authorId)).ReturnsAsync(true);
 
             // Act
             var result = await service.AuthorDelete(authorId);

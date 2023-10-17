@@ -9,7 +9,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
     [TestClass]
     public class BookServiceTests
     {
-        private static Mock<IBookRepository> repositoryMock;
+        private static Mock<IRepository<Book, BookSave>> repositoryMock;
         private static List<Book> availableBooks;
         private static BookService service;
 
@@ -22,7 +22,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
                 new Book() { Id = 2, Title = "Robinson Crusoe", ReleaseDate = DateTime.Parse("1719-04-25 00:00:00"), AuthorsJson = "[]" }
             };
 
-            repositoryMock = new Mock<IBookRepository>();
+            repositoryMock = new Mock<IRepository<Book, BookSave>>();
             service = new BookService(repositoryMock.Object);
         }
 
@@ -31,13 +31,13 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
         {
             // Arrange
             var filter = new FilterModel();
-            repositoryMock.Setup(repo => repo.GetBooks(filter)).ReturnsAsync(availableBooks);
+            repositoryMock.Setup(repo => repo.GetAll(filter)).ReturnsAsync(availableBooks);
 
             // Act
             var result = await service.GetBooks(filter);
 
             // Assert
-            repositoryMock.Verify(x => x.GetBooks(filter));
+            repositoryMock.Verify(x => x.GetAll(filter));
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result.LastOrDefault(), typeof(Book));
         }
@@ -47,13 +47,13 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
         {
             // Arrange
             Book expectedBook = availableBooks.OrderBy(x => x.Id).FirstOrDefault();
-            repositoryMock.Setup(repo => repo.GetBook(expectedBook.Id)).ReturnsAsync(expectedBook);
+            repositoryMock.Setup(repo => repo.GetById(expectedBook.Id)).ReturnsAsync(expectedBook);
 
             // Act
             var result = await service.GetBook(expectedBook.Id);
 
             // Assert
-            repositoryMock.Verify(x => x.GetBook(expectedBook.Id));
+            repositoryMock.Verify(x => x.GetById(expectedBook.Id));
             Assert.IsNotNull(result);
             Assert.AreEqual(expectedBook, result);
         }
@@ -65,7 +65,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             // Arrange
             Book expectedBook = null;
             int bookId = -1;
-            repositoryMock.Setup(repo => repo.GetBook(bookId)).ReturnsAsync(expectedBook);
+            repositoryMock.Setup(repo => repo.GetById(bookId)).ReturnsAsync(expectedBook);
 
             // Act & Assert
             var result = await service.GetBook(bookId);
@@ -83,13 +83,13 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
                 AuthorIds = new List<int>()
             };
 
-            repositoryMock.Setup(repo => repo.BookSave(bookToSave)).ReturnsAsync(savedBookExample);
+            repositoryMock.Setup(repo => repo.Save(bookToSave)).ReturnsAsync(savedBookExample);
 
             // Act
             var result = await service.BookSave(bookToSave);
 
             // Assert
-            repositoryMock.Verify(x => x.BookSave(bookToSave));
+            repositoryMock.Verify(x => x.Save(bookToSave));
             Assert.IsNotNull(result);
             Assert.AreEqual(savedBookExample, result);
         }
@@ -99,13 +99,13 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
         {
             // Arrange
             int bookId = -1;
-            repositoryMock.Setup(repo => repo.BookDelete(bookId)).ReturnsAsync(true);
+            repositoryMock.Setup(repo => repo.Delete(bookId)).ReturnsAsync(true);
 
             // Act
             var result = await service.BookDelete(bookId);
 
             // Assert
-            repositoryMock.Verify(x => x.BookDelete(bookId));
+            repositoryMock.Verify(x => x.Delete(bookId));
             Assert.IsTrue(result);
         }
     }

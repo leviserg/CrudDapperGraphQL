@@ -7,20 +7,20 @@ namespace CrudDapperGraphQL.Services
 {
     public class BookService : IBookService
     {
-        private readonly IBookRepository _repository;
-        public BookService(IBookRepository repository)
+        private readonly IRepository<Book, BookSave> _repository;
+        public BookService(IRepository<Book, BookSave> repository)
         {
             _repository = repository;
         }
 
         public async Task<IEnumerable<Book>> GetBooks(FilterModel filter)
         {
-            return await _repository.GetBooks(filter);
+            return await _repository.GetAll(filter);
         }
 
         public async Task<Book> GetBook(int bookId)
         {
-            var book = await _repository.GetBook(bookId);
+            var book = await _repository.GetById(bookId);
             if (book == null)
             {
                 throw new NotFoundException($"Book with ID {bookId} not found.");
@@ -32,7 +32,7 @@ namespace CrudDapperGraphQL.Services
         {
             try
             {
-                return await _repository.BookSave(book);
+                return await _repository.Save(book);
             }
             catch (Exception ex)
             {
@@ -43,7 +43,7 @@ namespace CrudDapperGraphQL.Services
 
         public async Task<bool> BookDelete(int bookId)
         {
-            return await _repository.BookDelete(bookId);
+            return await _repository.Delete(bookId);
         }
     }
 }

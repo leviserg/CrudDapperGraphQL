@@ -7,20 +7,20 @@ namespace CrudDapperGraphQL.Services
 {
     public class AuthorService : IAuthorService
     {
-        private readonly IAuthorRepository _repository;
-        public AuthorService(IAuthorRepository repository)
+        private readonly IRepository<Author, AuthorSave> _repository;
+        public AuthorService(IRepository<Author, AuthorSave> repository)
         {
             _repository = repository;
         }
 
         public async Task<IEnumerable<Author>> GetAuthors(FilterModel filter)
         {
-            return await _repository.GetAuthors(filter);
+            return await _repository.GetAll(filter);
         }
 
         public async Task<Author> GetAuthor(int authorId)
         {
-            var author = await _repository.GetAuthor(authorId);
+            var author = await _repository.GetById(authorId);
             if (author == null)
             {
                 throw new NotFoundException($"Author with ID {authorId} not found.");
@@ -31,7 +31,7 @@ namespace CrudDapperGraphQL.Services
         public async Task<Author> AuthorSave(AuthorSave author)
         {
             try {
-                return await _repository.AuthorSave(author);
+                return await _repository.Save(author);
             }
             catch (Exception ex)
             {
@@ -42,7 +42,7 @@ namespace CrudDapperGraphQL.Services
 
         public async Task<bool> AuthorDelete(int authorId)
         {
-            return await _repository.AuthorDelete(authorId);
+            return await _repository.Delete(authorId);
         }
     }
 }

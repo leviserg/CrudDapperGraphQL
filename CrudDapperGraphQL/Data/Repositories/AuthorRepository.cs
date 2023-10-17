@@ -6,7 +6,7 @@ using System.Data;
 
 namespace CrudDapperGraphQL.Data.Repositories
 {
-    public class AuthorRepository : IAuthorRepository
+    public class AuthorRepository : IRepository<Author, AuthorSave>
     {
         private readonly ApplicationDbContext _dbContext;
         public AuthorRepository(ApplicationDbContext dbContext)
@@ -14,7 +14,7 @@ namespace CrudDapperGraphQL.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Author>> GetAuthors(FilterModel filter)
+        public async Task<IEnumerable<Author>> GetAll(FilterModel filter)
         {
             using (var connection = _dbContext.CreateConnection())
             {
@@ -34,7 +34,7 @@ namespace CrudDapperGraphQL.Data.Repositories
             }
         }
 
-        public async Task<Author> GetAuthor(int authorId)
+        public async Task<Author> GetById(int authorId)
         {
             using (var connection = _dbContext.CreateConnection())
             {
@@ -47,7 +47,7 @@ namespace CrudDapperGraphQL.Data.Repositories
             }
         }
 
-        public async Task<Author> AuthorSave(AuthorSave author)
+        public async Task<Author> Save(AuthorSave author)
         {
             using (var connection = _dbContext.CreateConnection())
             {
@@ -58,7 +58,7 @@ namespace CrudDapperGraphQL.Data.Repositories
                 return result.FirstOrDefault();
             }
         }
-        public async Task<bool> AuthorDelete(int authorId)
+        public async Task<bool> Delete(int authorId)
         {
             try
             {
