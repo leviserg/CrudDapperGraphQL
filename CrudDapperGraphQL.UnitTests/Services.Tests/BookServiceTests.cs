@@ -34,7 +34,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             repositoryMock.Setup(repo => repo.GetAll(filter)).ReturnsAsync(availableBooks);
 
             // Act
-            var result = await service.GetBooks(filter);
+            var result = await service.GetAll(filter);
 
             // Assert
             repositoryMock.Verify(x => x.GetAll(filter));
@@ -50,7 +50,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             repositoryMock.Setup(repo => repo.GetById(expectedBook.Id)).ReturnsAsync(expectedBook);
 
             // Act
-            var result = await service.GetBook(expectedBook.Id);
+            var result = await service.GetById(expectedBook.Id);
 
             // Assert
             repositoryMock.Verify(x => x.GetById(expectedBook.Id));
@@ -68,7 +68,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             repositoryMock.Setup(repo => repo.GetById(bookId)).ReturnsAsync(expectedBook);
 
             // Act & Assert
-            var result = await service.GetBook(bookId);
+            var result = await service.GetById(bookId);
         }
 
         [TestMethod]
@@ -86,7 +86,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             repositoryMock.Setup(repo => repo.Save(bookToSave)).ReturnsAsync(savedBookExample);
 
             // Act
-            var result = await service.BookSave(bookToSave);
+            var result = await service.Save(bookToSave);
 
             // Assert
             repositoryMock.Verify(x => x.Save(bookToSave));
@@ -102,7 +102,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             repositoryMock.Setup(repo => repo.Delete(bookId)).ReturnsAsync(true);
 
             // Act
-            var result = await service.BookDelete(bookId);
+            var result = await service.Delete(bookId);
 
             // Assert
             repositoryMock.Verify(x => x.Delete(bookId));

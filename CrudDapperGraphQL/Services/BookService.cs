@@ -5,7 +5,7 @@ using SendGrid.Helpers.Errors.Model;
 
 namespace CrudDapperGraphQL.Services
 {
-    public class BookService : IBookService
+    public class BookService : IEntityService<Book, BookSave>
     {
         private readonly IRepository<Book, BookSave> _repository;
         public BookService(IRepository<Book, BookSave> repository)
@@ -13,12 +13,12 @@ namespace CrudDapperGraphQL.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<Book>> GetBooks(FilterModel filter)
+        public async Task<IEnumerable<Book>> GetAll(FilterModel filter)
         {
             return await _repository.GetAll(filter);
         }
 
-        public async Task<Book> GetBook(int bookId)
+        public async Task<Book> GetById(int bookId)
         {
             var book = await _repository.GetById(bookId);
             if (book == null)
@@ -28,7 +28,7 @@ namespace CrudDapperGraphQL.Services
             return book;
         }
 
-        public async Task<Book> BookSave(BookSave book)
+        public async Task<Book> Save(BookSave book)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace CrudDapperGraphQL.Services
             }
         }
 
-        public async Task<bool> BookDelete(int bookId)
+        public async Task<bool> Delete(int bookId)
         {
             return await _repository.Delete(bookId);
         }

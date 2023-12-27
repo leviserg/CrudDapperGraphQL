@@ -8,15 +8,15 @@ namespace CrudDapperGraphQL.GraphQL
     public class Mutation
     {
         public async Task<Book> saveBook(
-            [Service] IBookService service, BookSave book)
+            [Service] IEntityService<Book, BookSave> service, BookSave book)
         {
-            return await service.BookSave(book);
+            return await service.Save(book);
         }
 
         public async Task<Author> saveAuthor(
-            [Service] IAuthorService service, AuthorSave author)
+            [Service] IEntityService<Author, AuthorSave> service, AuthorSave author)
         {
-            return await service.AuthorSave(author);
+            return await service.Save(author);
         }
     }
 

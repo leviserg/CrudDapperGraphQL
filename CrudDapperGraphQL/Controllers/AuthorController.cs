@@ -10,10 +10,10 @@ namespace CrudDapperGraphQL.Controllers
     [ApiController]
     public class AuthorController : ControllerBase
     {
-        private readonly IAuthorService _authorService;
-        public AuthorController(IAuthorService authorService)
+        private readonly IEntityService<Author, AuthorSave> _service;
+        public AuthorController(IEntityService<Author, AuthorSave> service)
         {
-            _authorService = authorService;
+            _service = service;
         }
 
         [HttpGet]
@@ -24,7 +24,7 @@ namespace CrudDapperGraphQL.Controllers
             try
             {
                 filter = filter ?? new FilterModel();
-                var authors = await _authorService.GetAuthors(filter);
+                var authors = await _service.GetAll(filter);
                 return Ok(authors);
             }
             catch (Exception ex)
@@ -41,7 +41,7 @@ namespace CrudDapperGraphQL.Controllers
         {
             try
             {
-                var author = await _authorService.GetAuthor(id);
+                var author = await _service.GetById(id);
                 return Ok(author);
             }
             catch (NotFoundException ex)
@@ -62,7 +62,7 @@ namespace CrudDapperGraphQL.Controllers
         {
             try
             {
-                var savedAuthor = await _authorService.AuthorSave(author);
+                var savedAuthor = await _service.Save(author);
                 return Ok(savedAuthor);
             }
             catch (Exception ex)
@@ -77,7 +77,7 @@ namespace CrudDapperGraphQL.Controllers
         [Authorize]
         public async Task<IActionResult> AuthorDelete(int id)
         {
-            var result = await _authorService.AuthorDelete(id);
+            var result = await _service.Delete(id);
             return (result) ? Ok(true) : StatusCode(409, "Conflict");
         }
 

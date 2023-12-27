@@ -8,13 +8,13 @@ namespace CrudDapperGraphQL.GraphQL
     public class Query
     {
         public async Task<IEnumerable<Book>> getBooks(
-            [Service(ServiceKind.Synchronized)] IBookService service, FilterModel? filter
+            [Service(ServiceKind.Synchronized)] IEntityService<Book, BookSave> service, FilterModel? filter
         )
         {
             FilterModel filterInput = filter?.ToCompleteFilterModel(filter) ?? new FilterModel();
             try
             {
-                return await service.GetBooks(filterInput);
+                return await service.GetAll(filterInput);
             }
             catch(UnauthorizedAccessException ex)
             {
@@ -23,23 +23,23 @@ namespace CrudDapperGraphQL.GraphQL
         }
 
         public async Task<Book> getBook(
-            [Service] IBookService service, int id)
+            [Service] IEntityService<Book, BookSave> service, int id)
         {
-            return await service.GetBook(id);
+            return await service.GetById(id);
         }
 
         public async Task<IEnumerable<Author>> getAuthors(
-            [Service] IAuthorService service, FilterModel? filter
+            [Service] IEntityService<Author, AuthorSave> service, FilterModel? filter
         )
         {
             FilterModel filterInput = filter?.ToCompleteFilterModel(filter) ?? new FilterModel();
-            return await service.GetAuthors(filterInput);
+            return await service.GetAll(filterInput);
         }
 
         public async Task<Author> getAuthor(
-            [Service] IAuthorService service, int id)
+            [Service] IEntityService<Author, AuthorSave> service, int id)
         {
-            return await service.GetAuthor(id);
+            return await service.GetById(id);
         }
     }
 

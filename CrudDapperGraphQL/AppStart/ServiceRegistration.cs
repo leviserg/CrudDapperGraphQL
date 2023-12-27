@@ -23,8 +23,8 @@ namespace CrudDapperGraphQL.AppStart
             services.AddScoped<IRepository<Author, AuthorSave>, AuthorRepository>();
             services.AddScoped<IRepository<Book, BookSave>, BookRepository>();
 
-            services.AddTransient<IAuthorService, AuthorService>();
-            services.AddTransient<IBookService, BookService>();
+            services.AddTransient<IEntityService<Author, AuthorSave>, AuthorService>();
+            services.AddTransient<IEntityService<Book, BookSave>, BookService>();
 
             services.AddControllers();
 
@@ -114,8 +114,8 @@ namespace CrudDapperGraphQL.AppStart
 
             // GraphQL
             services.AddGraphQLServer()
-                .RegisterService<IBookService>()
-                .RegisterService<IAuthorService>()
+                .RegisterService<IEntityService<Book, BookSave>>()
+                .RegisterService<IEntityService<Author, AuthorSave>>()
                 .AddAuthorization()
                 .AddQueryType<Query>()
                 .AddMutationType<Mutation>()

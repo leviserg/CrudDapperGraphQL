@@ -10,10 +10,10 @@ namespace CrudDapperGraphQL.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly IBookService _bookService;
-        public BookController(IBookService bookService)
+        private readonly IEntityService<Book, BookSave> _service;
+        public BookController(IEntityService<Book, BookSave> service)
         {
-            _bookService = bookService;
+            _service = service;
         }
 
         [HttpGet]
@@ -24,7 +24,7 @@ namespace CrudDapperGraphQL.Controllers
             try
             {
                 filter = filter ?? new FilterModel();
-                var books = await _bookService.GetBooks(filter);
+                var books = await _service.GetAll(filter);
                 return Ok(books);
             }
             catch (Exception ex)
@@ -41,7 +41,7 @@ namespace CrudDapperGraphQL.Controllers
         {
             try
             {
-                var book = await _bookService.GetBook(id);
+                var book = await _service.GetById(id);
                 return Ok(book);
             }
             catch (NotFoundException ex)
@@ -62,7 +62,7 @@ namespace CrudDapperGraphQL.Controllers
         {
             try
             {
-                var savedBook = await _bookService.BookSave(book);
+                var savedBook = await _service.Save(book);
                 return Ok(savedBook);
             }
             catch (Exception ex)
@@ -77,7 +77,7 @@ namespace CrudDapperGraphQL.Controllers
         [Authorize]
         public async Task<IActionResult> BookDelete(int id)
         {
-            var result = await _bookService.BookDelete(id);
+            var result = await _service.Delete(id);
             return (result) ? Ok(true) : StatusCode(409, "Conflict");
         }
     }

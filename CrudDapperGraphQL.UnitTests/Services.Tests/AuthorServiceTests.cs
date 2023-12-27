@@ -22,7 +22,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             _repositoryMock.Setup(repo => repo.GetAll(filter)).ReturnsAsync(new List<Author> { expectedAuthor });
 
             // Act
-            var result = await service.GetAuthors(filter);
+            var result = await service.GetAll(filter);
 
             // Assert
             Assert.IsNotNull(result);
@@ -40,7 +40,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             _repositoryMock.Setup(repo => repo.GetById(authorId)).ReturnsAsync(expectedAuthor);
 
             // Act
-            var result = await service.GetAuthor(authorId);
+            var result = await service.GetById(authorId);
 
             // Assert
             Assert.IsNotNull(result);
@@ -59,7 +59,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             _repositoryMock.Setup(repo => repo.GetById(authorId)).ReturnsAsync(expectedAuthor);
 
             // Act and Assert
-            await service.GetAuthor(authorId); // throw Not Found Exception
+            await service.GetById(authorId); // throw Not Found Exception
         }
 
         [TestMethod]
@@ -79,7 +79,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             _repositoryMock.Setup(repo => repo.Save(authorToSave)).ReturnsAsync(expectedSavedAuthor);
 
             // Act
-            var result = await service.AuthorSave(authorToSave);
+            var result = await service.Save(authorToSave);
 
             // Assert
             Assert.IsNotNull(result);
@@ -96,7 +96,7 @@ namespace CrudDapperGraphQL.UnitTests.Services.Tests
             _repositoryMock.Setup(repo => repo.Delete(authorId)).ReturnsAsync(true);
 
             // Act
-            var result = await service.AuthorDelete(authorId);
+            var result = await service.Delete(authorId);
 
             // Assert
             Assert.IsTrue(result);
