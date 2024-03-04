@@ -32,6 +32,7 @@ namespace CrudDapperGraphQL.GraphQL
             [Service] IEntityService<Author, AuthorSave> service, FilterModel? filter
         )
         {
+            int a = 2 + 2;
             FilterModel filterInput = filter?.ToCompleteFilterModel(filter) ?? new FilterModel();
             return await service.GetAll(filterInput);
         }
