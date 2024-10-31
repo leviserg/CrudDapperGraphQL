@@ -1,5 +1,6 @@
 using CrudDapperGraphQL.AppStart;
 using CrudDapperGraphQL.Auth;
+using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 ServiceRegistration.AddDependentServices(builder.Services);
 
-builder.Services.Configure<ApiUser>(builder.Configuration.GetSection("ApiServiceAccount"));
+string apiUserJsonConfig = Environment.GetEnvironmentVariable("BookLibraryServiceAccount");
+var apiUserConfiguration = ApiUserConfigBuilder.Build(apiUserJsonConfig);
+builder.Services.Configure<ApiUser>(apiUserConfiguration);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
@@ -20,6 +23,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();

@@ -5,9 +5,11 @@ using CrudDapperGraphQL.Data.Contracts.Services;
 using CrudDapperGraphQL.Data.Models;
 using CrudDapperGraphQL.Data.Repositories;
 using CrudDapperGraphQL.GraphQL;
+using CrudDapperGraphQL.Middleware;
 using CrudDapperGraphQL.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
