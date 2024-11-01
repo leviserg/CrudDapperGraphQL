@@ -23,13 +23,53 @@ RUN dotnet publish "./CrudDapperGraphQL.csproj" -c $BUILD_CONFIGURATION -o /app/
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
-EXPOSE 8081
 EXPOSE 8080
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-ENV BookLibraryServiceAccount="**apiuserjsonstring**"
-ENV	BookLibraryDbConnection="**dbconnectionstring**"
+ENV BookLibraryServiceAccount="***"
+ENV	BookLibraryDbConnection="***"
 ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_HTTP_PORTS=8080
 
 ENTRYPOINT ["dotnet", "CrudDapperGraphQL.dll"]
+
+#=== Build WebApi from Dockerfile === (run from Dockerfile place)
+#
+#$ docker build -t cruddappergraphql:v1.0 .
+#
+#=== Network ===
+#
+#$ docker network create app-network
+#
+#=== SQL Express ===
+#= {run command without -p 1433:1433 not to be exposed to }
+#
+#$ docker run \
+#-e "ACCEPT_EULA=Y" \
+#-e "MSSQL_SA_PASSWORD=***" \
+#-e "MSSQL_COLLATION=SQL_Latin1_General_CP1_CI_AS" \
+#-v sqldata2022:/var/opt/mssql \
+#-d -p 1433:1433 \
+#--name sqlexpress2022 \
+#--network=app-network \
+#--hostname sqlexpress2022host \
+#mcr.microsoft.com/mssql/server:2022-latest
+#
+#=== WebApi ===
+#
+#$ docker run \
+#--name cruddappergraphql \
+#--network=app-network \
+#-p 8080:8080 \
+#-d cruddappergraphql:v1.0
+#
+#== Inspect & fix connection == 
+#
+#$ docker inspect sqlserver2022
+#$ docker inspect cruddappergraphql
+#
+#$ docker network connect app-network cruddappergraphql
+#
+#=== check ===
+#http://localhost:8080/swagger/index.html
