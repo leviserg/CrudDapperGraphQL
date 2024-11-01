@@ -123,6 +123,12 @@ namespace CrudDapperGraphQL.AppStart
                 .AddMutationType<Mutation>()
                 .AddErrorFilter<AuthorizationErrorFilter>();
 
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = 307;
+                options.HttpsPort = 8081;
+            });
+
         }
     }
 }
