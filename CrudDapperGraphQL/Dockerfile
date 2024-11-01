@@ -27,11 +27,6 @@ EXPOSE 8080
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-ENV BookLibraryServiceAccount="***"
-ENV	BookLibraryDbConnection="***"
-ENV ASPNETCORE_ENVIRONMENT=Development
-ENV ASPNETCORE_HTTP_PORTS=8080
-
 ENTRYPOINT ["dotnet", "CrudDapperGraphQL.dll"]
 
 #=== Build WebApi from Dockerfile === (run from Dockerfile place)

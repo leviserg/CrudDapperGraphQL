@@ -1,0 +1,32 @@
+﻿version: '3.9'
+services:
+
+    sqlexpress2022:
+        container_name: sqlexpress2022
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        ports:
+            - 1433:1433
+        volumes:
+             - sqldata2022:/var/opt/mssql
+        hostname:
+            sqlexpress2022host
+        environment:
+            ACCEPT_EULA: Y
+            MSSQL_SA_PASSWORD: ${SERVER_PWD}
+            MSSQL_COLLATION: SQL_Latin1_General_CP1_CI_AS
+
+    webapp:
+        container_name: web-app
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - 8080:8080
+        environment:
+            ASPNETCORE_HTTP_PORTS: 8080
+            ASPNETCORE_ENVIRONMENT: Development
+            BookLibraryServiceAccount: ${APP_ACCOUNT}
+            BookLibraryDbConnection: ${APP_DBCONN}
+        
+volumes:
+    sqldata2022:    
