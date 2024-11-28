@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\MyProjects\\dotnet\\CrudDapperGraphQL\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{265BE28A-9CF1-4EF6-ADBD-4D8F2C88D199}|CrudDapperGraphQL.UnitTests\\CrudDapperGraphQL.UnitTests.csproj|c:\\myprojects\\dotnet\\cruddappergraphql\\cruddappergraphql.unittests\\services.tests\\bookservicetests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{265BE28A-9CF1-4EF6-ADBD-4D8F2C88D199}|CrudDapperGraphQL.UnitTests\\CrudDapperGraphQL.UnitTests.csproj|solutionrelative:cruddappergraphql.unittests\\services.tests\\bookservicetests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9095E627-D99A-418B-8A4F-DF16F8FAF6A3}|CrudDapperGraphQL\\CrudDapperGraphQL.csproj|c:\\myprojects\\dotnet\\cruddappergraphql\\cruddappergraphql\\data\\models\\booksave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9095E627-D99A-418B-8A4F-DF16F8FAF6A3}|CrudDapperGraphQL\\CrudDapperGraphQL.csproj|solutionrelative:cruddappergraphql\\data\\models\\booksave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8FFCE701-62FF-4FE7-8877-3346443D2E4D}|Solution Items{8FFCE701-62FF-4FE7-8877-3346443D2E4D}|C:\\MyProjects\\dotnet\\CrudDapperGraphQL\\docker-composer.yml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{8FFCE701-62FF-4FE7-8877-3346443D2E4D}|Solution Items{8FFCE701-62FF-4FE7-8877-3346443D2E4D}|solutionrelative:docker-composer.yml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BookSave.cs",
+              "DocumentMoniker": "C:\\MyProjects\\dotnet\\CrudDapperGraphQL\\CrudDapperGraphQL\\Data\\Models\\BookSave.cs",
+              "RelativeDocumentMoniker": "CrudDapperGraphQL\\Data\\Models\\BookSave.cs",
+              "ToolTip": "C:\\MyProjects\\dotnet\\CrudDapperGraphQL\\CrudDapperGraphQL\\Data\\Models\\BookSave.cs",
+              "RelativeToolTip": "CrudDapperGraphQL\\Data\\Models\\BookSave.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-28T17:48:13.956Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BookServiceTests.cs",
+              "DocumentMoniker": "C:\\MyProjects\\dotnet\\CrudDapperGraphQL\\CrudDapperGraphQL.UnitTests\\Services.Tests\\BookServiceTests.cs",
+              "RelativeDocumentMoniker": "CrudDapperGraphQL.UnitTests\\Services.Tests\\BookServiceTests.cs",
+              "ToolTip": "C:\\MyProjects\\dotnet\\CrudDapperGraphQL\\CrudDapperGraphQL.UnitTests\\Services.Tests\\BookServiceTests.cs",
+              "RelativeToolTip": "CrudDapperGraphQL.UnitTests\\Services.Tests\\BookServiceTests.cs",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAvwE0AAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-28T17:47:34.189Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "docker-composer.yml",
+              "DocumentMoniker": "C:\\MyProjects\\dotnet\\CrudDapperGraphQL\\docker-composer.yml",
+              "RelativeDocumentMoniker": "docker-composer.yml",
+              "ToolTip": "C:\\MyProjects\\dotnet\\CrudDapperGraphQL\\docker-composer.yml",
+              "RelativeToolTip": "docker-composer.yml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003775|",
+              "WhenOpened": "2024-11-28T17:44:59.735Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

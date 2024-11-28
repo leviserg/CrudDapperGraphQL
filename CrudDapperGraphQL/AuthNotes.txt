@@ -1,0 +1,3 @@
+﻿
+Authorization : apiuser / apiuser
+Using Swagger: Login - "Bearer +yourToken"

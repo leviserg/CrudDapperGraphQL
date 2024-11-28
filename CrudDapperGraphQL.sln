@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrudDapperGraphQL", "CrudDapperGraphQL\CrudDapperGraphQL.csproj", "{9095E627-D99A-418B-8A4F-DF16F8FAF6A3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrudDapperGraphQL.UnitTests", "CrudDapperGraphQL.UnitTests\CrudDapperGraphQL.UnitTests.csproj", "{265BE28A-9CF1-4EF6-ADBD-4D8F2C88D199}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8FFCE701-62FF-4FE7-8877-3346443D2E4D}"
+	ProjectSection(SolutionItems) = preProject
+		docker-composer.yml = docker-composer.yml
+		Dockerfile = Dockerfile
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9095E627-D99A-418B-8A4F-DF16F8FAF6A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9095E627-D99A-418B-8A4F-DF16F8FAF6A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9095E627-D99A-418B-8A4F-DF16F8FAF6A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9095E627-D99A-418B-8A4F-DF16F8FAF6A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{265BE28A-9CF1-4EF6-ADBD-4D8F2C88D199}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{265BE28A-9CF1-4EF6-ADBD-4D8F2C88D199}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{265BE28A-9CF1-4EF6-ADBD-4D8F2C88D199}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{265BE28A-9CF1-4EF6-ADBD-4D8F2C88D199}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CCDDFEEA-7D30-4C16-BF3A-0C4C26B344CF}
+	EndGlobalSection
+EndGlobal
